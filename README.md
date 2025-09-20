@@ -1,124 +1,210 @@
 # Agent Playground
 
-**LLM + Tool 기반 에이전트 실행 흐름을 시각화하고 디버깅하는 실험 UI**
+**MCP 서버와의 상호작용을 시각화하고 디버깅하는 웹 기반 개발 도구**
 
-`agent-playground` 앱은 LLM과 MCP 서버 간의 상호작용을 실시간으로 시각화하고 디버깅할 수 있는 개발 도구입니다.
+Agent Playground는 개발자들이 MCP(Model Context Protocol) 서버와의 tool call 실행 흐름을 이해하고, 성능을 모니터링하며, 문제를 진단할 수 있도록 직관적인 인터페이스를 제공하는 웹 애플리케이션입니다.
 
-## ✅ 1. 전체 구조 설계
+## 🎯 핵심 기능
+
+### 1. 자연어 → Tool Call 변환
+* 자연어로 요청사항을 입력하면 자동으로 tool call JSON으로 변환
+* 복잡한 JSON 문법을 직접 작성하지 않고도 MCP 도구 테스트 가능
+* 고급 사용자를 위한 Monaco Editor 직접 편집 모드 제공
+
+### 2. 실시간 실행 흐름 시각화
+* React Flow를 사용한 시퀀스 다이어그램으로 실행 과정 표시
+* 각 단계별 타이밍 정보, 페이로드 크기, 상태 표시
+* 성공/실패 상태를 색상으로 구분하여 직관적 파악
+
+### 3. 성능 모니터링 및 디버깅
+* 실행 시간, 지연 시간, 페이로드 크기 등 성능 메트릭 추적
+* 병목 지점 식별 및 성능 경고 표시
+* 상세한 응답 데이터를 JSON 뷰어로 탐색
+
+### 4. 세션 관리
+* Tool call 세션 저장 및 로드 기능
+* 팀과 디버깅 시나리오 공유를 위한 내보내기/가져오기
+* 문제 재현을 위한 완전한 상태 복원
+
+## 🏗️ 아키텍처
 
 ```
-┌──────────────────────────────────────────────┐
-│              agent-playground UI             │
-│                                              │
-│  ┌────────────┐    ┌────────────┐            │
-│  │ Monaco     │ →  │ JSON View  │ ← Claude   │
-│  │ tool_call  │    │ 응답 확인  │ ← MCP 서버 │
-│  └────┬───────┘    └────┬───────┘            │
-│       ↓                 ↓                    │
-│  ┌─────────────────────────────┐             │
-│  │  react-flow 시퀀스 다이어그램 │            │
-│  └─────────────────────────────┘             │
-│            ↑     ↑     ↑                     │
-│      latency, payload, 에러 확인             │
-└──────────────────────────────────────────────┘
+┌─────────────────────────────────────────────────────────┐
+│                   Agent Playground                      │
+│                                                         │
+│  ┌─────────────────┐  ┌─────────────────┐              │
+│  │  Natural Lang   │  │   JSON Editor   │              │
+│  │  Input Panel    │  │   (Monaco)      │              │
+│  └─────────────────┘  └─────────────────┘              │
+│           │                     │                       │
+│           └─────────┬───────────┘                       │
+│                     │                                   │
+│  ┌─────────────────────────────────────────────────────┐│
+│  │            Tool Call Processor                      ││
+│  └─────────────────────────────────────────────────────┘│
+│                     │                                   │
+│  ┌─────────────────────────────────────────────────────┐│
+│  │              MCP Client                             ││
+│  └─────────────────────────────────────────────────────┘│
+│                     │                                   │
+│  ┌─────────────────────────────────────────────────────┐│
+│  │         Flow Visualization (React Flow)             ││
+│  └─────────────────────────────────────────────────────┘│
+│                                                         │
+│  ┌─────────────────┐  ┌─────────────────┐              │
+│  │  Response View  │  │  Session Mgmt   │              │
+│  │  (JSON Viewer)  │  │                 │              │
+│  └─────────────────┘  └─────────────────┘              │
+└─────────────────────────────────────────────────────────┘
+                          │
+                          ▼
+┌─────────────────────────────────────────────────────────┐
+│                   MCP Server                            │
+│              (External Process)                         │
+└─────────────────────────────────────────────────────────┘
 ```
 
-## ✅ 2. 기술 스택 정리
+## 🛠️ 기술 스택
 
-| 기능 | 라이브러리 / 도구 |
-|------|------------------|
-| 시퀀스 다이어그램 | `react-flow` |
-| 상태 흐름 관리 | `xstate` |
-| 코드 입력 및 편집 | `monaco-editor` |
-| 응답 JSON 탐색 | `react-json-view` |
-| LLM 연동 | Claude Desktop + MCP |
-| 요청/응답 시각화 | Custom Hook + Context |
+| 영역 | 기술 |
+|------|------|
+| Frontend Framework | React + TypeScript |
+| Build Tool | Vite |
+| Styling | Tailwind CSS |
+| 시각화 | React Flow |
+| 코드 에디터 | Monaco Editor |
+| JSON 뷰어 | React JSON View |
+| 상태 관리 | Zustand |
+| 테스팅 | Jest + React Testing Library + Playwright |
 
-## ✅ 3. 핵심 기능 정의
-
-### 1. `tool_call` 시나리오 실행
-* Monaco Editor에서 `tool_call` JSON 작성
-* Claude Desktop 또는 LangGraph로 전송
-* 결과 JSON을 MCP → Playground에 전송
-
-### 2. 시각화 흐름
-* `react-flow`를 이용해 시퀀스 흐름 표시
-   * 사용자 → Claude → MCP Tool → Claude → 사용자
-* 각 노드마다:
-   * request/response payload 요약
-   * latency(ms)
-   * 상태 (`success`, `fail`, `timeout`)
-
-### 3. 실시간 디버깅
-* 요청 시 `xstate`로 실행 흐름 추적
-* 실패 시 에러 로그 및 HTTP 응답 헤더 표시
-* `react-json-view`로 결과값 확인 및 필터링
-
-## ✅ 4. 개발 단계 로드맵
-
-### 📦 Phase 1: 초기 구조
-* Vite + TypeScript + Tailwind로 프로젝트 초기화
-* Layout 구성 (좌측 editor, 우측 json-view, 하단 react-flow)
-* tool_call JSON을 Monaco Editor로 작성
-* MCP 서버와 WebSocket/HTTP로 연결
-
-### 🔁 Phase 2: 시퀀스 다이어그램
-* 요청이 실행될 때마다 react-flow에 노드/링크 추가
-* latency, payload 크기 메타데이터 표시
-* 실패 시 빨간 노드, 성공은 초록 노드 등 시각 구분
-
-### 🧪 Phase 3: Claude & LangGraph 연동
-* Claude tool_call 명령을 실행하고
-* 해당 결과를 실시간으로 agent-playground로 브로드캐스트
-* LangGraph 실행 흐름도 (xstate 기반) 시각화 추가
-
-## ✅ 5. 폴더 구조 예시
+## 📁 프로젝트 구조
 
 ```
 agent-playground/
 ├── src/
 │   ├── components/
-│   │   ├── FlowDiagram.tsx
-│   │   ├── JsonResponseView.tsx
-│   │   └── ToolCallEditor.tsx
+│   │   ├── InputPanel/
+│   │   │   ├── NaturalLanguageInput.tsx
+│   │   │   └── JsonEditor.tsx
+│   │   ├── Visualization/
+│   │   │   ├── FlowDiagram.tsx
+│   │   │   └── NodeComponents.tsx
+│   │   ├── ResponsePanel/
+│   │   │   └── JsonViewer.tsx
+│   │   └── Settings/
+│   │       └── ConnectionConfig.tsx
+│   ├── services/
+│   │   ├── McpClient.ts
+│   │   ├── NlpProcessor.ts
+│   │   └── SessionManager.ts
 │   ├── state/
-│   │   └── agentMachine.ts (xstate)
-│   ├── hooks/
-│   │   └── useMcpConnection.ts
-│   ├── pages/
-│   │   └── PlaygroundPage.tsx
-│   └── App.tsx
-└── public/
+│   │   ├── AppState.ts
+│   │   └── FlowState.ts
+│   ├── utils/
+│   │   ├── JsonValidator.ts
+│   │   └── PerformanceTracker.ts
+│   └── types/
+│       └── index.ts
+├── tests/
+│   ├── unit/
+│   ├── integration/
+│   └── e2e/
+└── docs/
+    ├── requirements.md
+    └── design.md
 ```
 
-## 🔧 연동 테스트 예시
+## 🚀 개발 로드맵
 
-### Claude Desktop 예시 (MCP tool 등록):
+### Phase 1: 기본 인프라
+- [ ] Vite + React + TypeScript 프로젝트 설정
+- [ ] 기본 UI 레이아웃 구성
+- [ ] MCP 클라이언트 기본 구조 구현
+- [ ] 자연어 입력 패널 구현
 
-```bash
-claude mcp add playground \
-  -e TOOL_API_KEY=abcd1234 \
-  -- node ./src/mcp-server.js
-```
+### Phase 2: 핵심 기능
+- [ ] 자연어 → Tool Call JSON 변환 엔진
+- [ ] Monaco Editor 통합 및 JSON 검증
+- [ ] MCP 서버 연결 및 Tool Call 실행
+- [ ] React Flow 기반 시각화 구현
 
-### 응답 JSON 전송 (tool 응답 예시):
+### Phase 3: 고급 기능
+- [ ] 성능 모니터링 및 메트릭 수집
+- [ ] 세션 저장/로드 기능
+- [ ] 오류 처리 및 복구 메커니즘
+- [ ] 반응형 UI 및 사용성 개선
+
+## 🔧 MCP 서버 연동 예시
+
+### 기본 MCP 서버 설정
 
 ```json
 {
-  "tool_call_id": "xyz-123",
-  "status": "success",
-  "result": {
-    "summary": "Server responded in 420ms.",
-    "data": { ... }
+  "mcpServers": {
+    "filesystem": {
+      "command": "uvx",
+      "args": ["mcp-server-filesystem", "/path/to/allowed/directory"],
+      "env": {}
+    },
+    "git": {
+      "command": "uvx", 
+      "args": ["mcp-server-git", "--repository", "/path/to/repo"],
+      "env": {}
+    }
   }
 }
 ```
 
-## 시작하기
+### Tool Call 예시
 
-이 프로젝트를 시작하려면:
+```json
+{
+  "name": "read_file",
+  "arguments": {
+    "path": "/path/to/file.txt"
+  }
+}
+```
 
-1. 프로젝트 클론
-2. 의존성 설치: `npm install`
-3. 개발 서버 실행: `npm run dev`
-4. MCP 서버 설정 및 Claude Desktop 연동
+## 🧪 테스트 전략
+
+### 단위 테스트
+- React 컴포넌트 테스트 (React Testing Library)
+- 서비스 로직 테스트 (Jest)
+- 유틸리티 함수 테스트
+
+### 통합 테스트
+- MCP 클라이언트 통신 테스트
+- 자연어 처리 파이프라인 테스트
+- 세션 관리 테스트
+
+### E2E 테스트
+- 전체 사용자 워크플로 테스트 (Playwright)
+- 성능 벤치마크 테스트
+- 오류 시나리오 테스트
+
+## 🔒 보안 고려사항
+
+- MCP 서버 연결시 TLS/SSL 사용
+- 민감한 데이터의 로컬 스토리지 암호화
+- 입력 검증 및 XSS 방지
+- 파일 업로드 제한 및 검증
+
+## 🤝 기여하기
+
+1. 이 저장소를 포크합니다
+2. 기능 브랜치를 생성합니다 (`git checkout -b feature/amazing-feature`)
+3. 변경사항을 커밋합니다 (`git commit -m 'Add amazing feature'`)
+4. 브랜치에 푸시합니다 (`git push origin feature/amazing-feature`)
+5. Pull Request를 생성합니다
+
+## 📄 라이선스
+
+이 프로젝트는 MIT 라이선스 하에 배포됩니다. 자세한 내용은 `LICENSE` 파일을 참조하세요.
+
+## 🆘 지원
+
+문제가 발생하거나 질문이 있으시면:
+- GitHub Issues에 문제를 보고해주세요
+- 문서를 확인해주세요: `docs/` 폴더
+- 예제를 참조해주세요: `examples/` 폴더
