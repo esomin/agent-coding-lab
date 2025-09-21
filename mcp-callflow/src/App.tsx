@@ -1,19 +1,59 @@
 import { useState } from 'react';
-import { MainLayout, GridContainer, GridItem, Panel, InputPanel, FlowDemo } from './components';
+import { MainLayout, GridContainer, GridItem, Panel, InputPanel, FlowDemo, ResponsePanel } from './components';
+import type { McpResponse } from './types';
 import './App.css';
 
 function App() {
   const [toolCallJson, setToolCallJson] = useState('');
-  const [executionResult, setExecutionResult] = useState<string | null>(null);
+  const [executionResult, setExecutionResult] = useState<McpResponse | null>(null);
+  const [isExecuting, setIsExecuting] = useState(false);
+  const [executionError, setExecutionError] = useState<string | null>(null);
 
   const handleToolCallGenerated = (toolCall: string) => {
     setToolCallJson(toolCall);
   };
 
-  const handleExecute = (toolCall: string) => {
-    // TODO: Implement actual MCP execution
-    console.log('Executing tool call:', toolCall);
-    setExecutionResult(`Tool call executed: ${toolCall}`);
+  const handleExecute = async (toolCall: string) => {
+    setIsExecuting(true);
+    setExecutionError(null);
+    setExecutionResult(null);
+
+    try {
+      // TODO: Implement actual MCP execution
+      console.log('Executing tool call:', toolCall);
+      
+      // Simulate API call with delay
+      await new Promise(resolve => setTimeout(resolve, 1500));
+      
+      // Mock response for demonstration
+      const mockResponse: McpResponse = {
+        id: `exec-${Date.now()}`,
+        result: {
+          success: true,
+          data: {
+            message: "Tool call executed successfully",
+            toolCall: JSON.parse(toolCall),
+            timestamp: new Date().toISOString(),
+            details: {
+              processedFiles: 3,
+              totalSize: "1.2MB",
+              operations: ["read", "process", "write"]
+            }
+          }
+        },
+        metadata: {
+          executionTime: 1450,
+          payloadSize: 2048,
+          timestamp: Date.now()
+        }
+      };
+      
+      setExecutionResult(mockResponse);
+    } catch (error) {
+      setExecutionError(error instanceof Error ? error.message : 'Unknown error occurred');
+    } finally {
+      setIsExecuting(false);
+    }
   };
 
   return (
@@ -40,16 +80,12 @@ function App() {
         
         <GridItem xs={12} lg={6}>
           <Panel title="Response Viewer">
-            {executionResult ? (
-              <div>
-                <p><strong>실행 결과:</strong></p>
-                <pre style={{ fontSize: '0.875rem', backgroundColor: '#f8fafc', padding: '1rem', borderRadius: '0.25rem' }}>
-                  {executionResult}
-                </pre>
-              </div>
-            ) : (
-              <p>MCP 서버 응답이 여기에 표시됩니다.</p>
-            )}
+            <ResponsePanel
+              response={executionResult}
+              loading={isExecuting}
+              error={executionError}
+              title="MCP Server Response"
+            />
           </Panel>
         </GridItem>
         

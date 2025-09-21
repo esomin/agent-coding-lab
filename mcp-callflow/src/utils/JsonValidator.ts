@@ -1,6 +1,6 @@
 // JSON validation utilities for Tool Call validation
 
-import type { ToolCall, ValidationResult } from '../types';
+import type { ToolCall } from '../types';
 
 export interface JsonValidationError {
   line?: number;
@@ -9,43 +9,46 @@ export interface JsonValidationError {
   severity: 'error' | 'warning' | 'info';
 }
 
-export interface JsonValidationResult extends ValidationResult {
+export interface JsonValidationResult {
+  isValid: boolean;
   errors: JsonValidationError[];
   warnings?: JsonValidationError[];
+  suggestions?: string[];
 }
 
 export class JsonValidator {
-  private static toolCallSchema = {
-    type: 'object',
-    properties: {
-      name: {
-        type: 'string',
-        minLength: 1,
-        pattern: '^[a-zA-Z][a-zA-Z0-9_]*$'
-      },
-      arguments: {
-        type: 'object'
-      },
-      metadata: {
-        type: 'object',
-        properties: {
-          confidence: {
-            type: 'number',
-            minimum: 0,
-            maximum: 1
-          },
-          alternatives: {
-            type: 'array',
-            items: {
-              type: 'object'
-            }
-          }
-        }
-      }
-    },
-    required: ['name', 'arguments'],
-    additionalProperties: false
-  };
+  // Tool call schema for future use
+  // private static toolCallSchema = {
+  //   type: 'object',
+  //   properties: {
+  //     name: {
+  //       type: 'string',
+  //       minLength: 1,
+  //       pattern: '^[a-zA-Z][a-zA-Z0-9_]*$'
+  //     },
+  //     arguments: {
+  //       type: 'object'
+  //     },
+  //     metadata: {
+  //       type: 'object',
+  //       properties: {
+  //         confidence: {
+  //           type: 'number',
+  //           minimum: 0,
+  //           maximum: 1
+  //         },
+  //         alternatives: {
+  //           type: 'array',
+  //           items: {
+  //             type: 'object'
+  //           }
+  //         }
+  //       }
+  //     }
+  //   },
+  //   required: ['name', 'arguments'],
+  //   additionalProperties: false
+  // };
 
   private static validToolNames = [
     'file_read',
