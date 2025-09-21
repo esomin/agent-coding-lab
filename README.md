@@ -1,9 +1,8 @@
-# Agent Playground
+# MCP CallFlow
 
 **MCP 서버와의 상호작용을 시각화하고 디버깅하는 웹 기반 개발 도구**
 
-Agent Playground는 개발자들이 MCP(Model Context Protocol) 서버와의 tool call 실행 흐름을 이해하고, 성능을 모니터링하며, 문제를 진단할 수 있도록 직관적인 인터페이스를 제공하는 웹 애플리케이션입니다.
-
+MCP CallFlow는 개발자들이 MCP(Model Context Protocol) 서버와의 tool call 실행 흐름을 이해하고, 성능을 모니터링하며, 문제를 진단할 수 있도록 직관적인 인터페이스를 제공하는 웹 애플리케이션입니다.
 ## 🎯 핵심 기능
 
 ### 1. 자연어 → Tool Call 변환
