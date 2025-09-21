@@ -39,13 +39,13 @@
     - 모호한 입력에 대한 명확화 제안 생성 기능
     - _Requirements: 1_
 
-- [ ] 5. Monaco Editor 통합 및 JSON 편집 기능
-  - [ ] 5.1 Monaco Editor 컴포넌트 구현
+- [x] 5. Monaco Editor 통합 및 JSON 편집 기능
+  - [x] 5.1 Monaco Editor 컴포넌트 구현
     - React에서 Monaco Editor 통합
     - JSON 스키마 기반 자동완성 및 검증 설정
     - _Requirements: 1.1_
 
-  - [ ] 5.2 JSON 유효성 검사 구현
+  - [x] 5.2 JSON 유효성 검사 구현
     - 실시간 JSON 구문 검사 및 오류 표시
     - Tool Call 스키마 검증 로직 구현
     - _Requirements: 1.1_

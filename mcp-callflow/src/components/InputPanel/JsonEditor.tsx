@@ -1,6 +1,7 @@
-// Basic JSON editor component (will be enhanced with Monaco Editor later)
+// Enhanced JSON editor component using Monaco Editor
 
-import React, { useState, useEffect } from 'react';
+import React from 'react';
+import { MonacoEditor } from './MonacoEditor';
 import './JsonEditor.css';
 
 interface JsonEditorProps {
@@ -14,139 +15,17 @@ export const JsonEditor: React.FC<JsonEditorProps> = ({
   onChange,
   onValidationChange
 }) => {
-  const [jsonValue, setJsonValue] = useState(value);
-  const [errors, setErrors] = useState<string[]>([]);
-  const [isValid, setIsValid] = useState(false);
-
-  useEffect(() => {
-    setJsonValue(value);
-  }, [value]);
-
-  const validateJson = (jsonString: string) => {
-    if (!jsonString.trim()) {
-      setErrors([]);
-      setIsValid(false);
-      onValidationChange?.(false);
-      return;
-    }
-
-    try {
-      const parsed = JSON.parse(jsonString);
-      
-      // Validate tool call structure
-      if (typeof parsed !== 'object' || parsed === null) {
-        throw new Error('Tool call must be an object');
-      }
-      
-      if (!parsed.name || typeof parsed.name !== 'string') {
-        throw new Error('Tool call must have a "name" field of type string');
-      }
-      
-      if (!parsed.arguments || typeof parsed.arguments !== 'object') {
-        throw new Error('Tool call must have an "arguments" field of type object');
-      }
-
-      setErrors([]);
-      setIsValid(true);
-      onValidationChange?.(true);
-    } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Invalid JSON';
-      setErrors([errorMessage]);
-      setIsValid(false);
-      onValidationChange?.(false);
-    }
-  };
-
-  const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    const newValue = e.target.value;
-    setJsonValue(newValue);
-    onChange?.(newValue);
-    validateJson(newValue);
-  };
-
-  const formatJson = () => {
-    try {
-      const parsed = JSON.parse(jsonValue);
-      const formatted = JSON.stringify(parsed, null, 2);
-      setJsonValue(formatted);
-      onChange?.(formatted);
-    } catch (error) {
-      // If JSON is invalid, don't format
-    }
-  };
-
-  const insertTemplate = () => {
-    const template = {
-      name: "example_tool",
-      arguments: {
-        param1: "value1",
-        param2: "value2"
-      }
-    };
-    const templateJson = JSON.stringify(template, null, 2);
-    setJsonValue(templateJson);
-    onChange?.(templateJson);
-    validateJson(templateJson);
-  };
-
   return (
     <div className="json-editor">
-      <div className="json-editor-header">
-        <div className="editor-actions">
-          <button
-            className="editor-action-btn"
-            onClick={formatJson}
-            disabled={!jsonValue.trim()}
-          >
-            포맷
-          </button>
-          <button
-            className="editor-action-btn"
-            onClick={insertTemplate}
-          >
-            템플릿 삽입
-          </button>
-        </div>
-        
-        <div className="validation-status">
-          {jsonValue.trim() && (
-            <span className={`status-indicator ${isValid ? 'valid' : 'invalid'}`}>
-              {isValid ? '✓ 유효함' : '✗ 오류'}
-            </span>
-          )}
-        </div>
-      </div>
-
-      <div className="json-editor-content">
-        <textarea
-          className={`json-textarea ${errors.length > 0 ? 'error' : ''}`}
-          value={jsonValue}
-          onChange={handleChange}
-          placeholder={`Tool Call JSON을 입력하세요:
-
-{
-  "name": "tool_name",
-  "arguments": {
-    "param": "value"
-  }
-}`}
-          spellCheck={false}
-        />
-      </div>
-
-      {errors.length > 0 && (
-        <div className="json-errors">
-          <h4 className="errors-title">JSON 오류:</h4>
-          <ul className="errors-list">
-            {errors.map((error, index) => (
-              <li key={index} className="error-item">
-                {error}
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
-
+      <MonacoEditor
+        value={value}
+        onChange={onChange}
+        onValidationChange={onValidationChange}
+        language="json"
+        theme="light"
+        height="400px"
+      />
+      
       <div className="json-help">
         <h4 className="help-title">Tool Call 형식:</h4>
         <ul className="help-list">
