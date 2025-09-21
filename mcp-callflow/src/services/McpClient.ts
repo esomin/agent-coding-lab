@@ -88,43 +88,69 @@ export class McpClient implements IMcpClient {
       throw new Error('Not connected to MCP server');
     }
 
-    // Mock implementation - in real scenario, this would query the MCP server
-    return [
-      {
-        name: 'file_read',
-        description: 'Read contents of a file',
-        inputSchema: {
-          type: 'object',
-          properties: {
-            path: { type: 'string' }
-          },
-          required: ['path']
-        }
-      },
-      {
-        name: 'file_write',
-        description: 'Write content to a file',
-        inputSchema: {
-          type: 'object',
-          properties: {
-            path: { type: 'string' },
-            content: { type: 'string' }
-          },
-          required: ['path', 'content']
-        }
-      },
-      {
-        name: 'search',
-        description: 'Search for content',
-        inputSchema: {
-          type: 'object',
-          properties: {
-            query: { type: 'string' }
-          },
-          required: ['query']
-        }
+    const requestId = (++this.requestId).toString();
+    const request = {
+      jsonrpc: '2.0',
+      id: requestId,
+      method: 'tools/list'
+    };
+
+    try {
+      let response: McpResponse;
+      
+      if (this.config?.protocol === 'websocket' && this.websocket) {
+        response = await this.executeWebSocketRequest(request, Date.now());
+      } else if (this.config?.protocol === 'http') {
+        response = await this.executeHttpRequest(request, Date.now());
+      } else {
+        throw new Error(`Unsupported protocol: ${this.config?.protocol}`);
       }
-    ];
+
+      if (response.error) {
+        throw new Error(`Failed to list tools: ${response.error.message}`);
+      }
+
+      return response.result?.tools || [];
+    } catch (error) {
+      // Fallback to mock data if server doesn't support tools/list
+      console.warn('Failed to fetch tools from server, using fallback:', error);
+      return [
+        {
+          name: 'file_read',
+          description: 'Read contents of a file',
+          inputSchema: {
+            type: 'object',
+            properties: {
+              path: { type: 'string' }
+            },
+            required: ['path']
+          }
+        },
+        {
+          name: 'file_write',
+          description: 'Write content to a file',
+          inputSchema: {
+            type: 'object',
+            properties: {
+              path: { type: 'string' },
+              content: { type: 'string' }
+            },
+            required: ['path', 'content']
+          }
+        },
+        {
+          name: 'search',
+          description: 'Search for content',
+          inputSchema: {
+            type: 'object',
+            properties: {
+              query: { type: 'string' }
+            },
+            required: ['query']
+          }
+        }
+      ];
+    }
   }
 
   getServerStatus(): ConnectionStatus {

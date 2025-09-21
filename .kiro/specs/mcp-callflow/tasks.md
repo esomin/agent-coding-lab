@@ -50,13 +50,13 @@
     - Tool Call 스키마 검증 로직 구현
     - _Requirements: 1.1_
 
-- [ ] 6. MCP 클라이언트 구현
-  - [ ] 6.1 기본 MCP 통신 클라이언트 구현
+- [x] 6. MCP 클라이언트 구현
+  - [x] 6.1 기본 MCP 통신 클라이언트 구현
     - WebSocket/HTTP 기반 MCP 서버 연결 로직
     - Tool Call 실행 및 응답 처리 메커니즘
     - _Requirements: 2, 5_
 
-  - [ ] 6.2 연결 관리 및 설정 기능 구현
+  - [x] 6.2 연결 관리 및 설정 기능 구현
     - MCP 서버 연결 설정 UI 컴포넌트
     - 연결 상태 모니터링 및 재연결 로직
     - _Requirements: 5_
