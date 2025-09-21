@@ -1,0 +1,151 @@
+/* Responsive grid system styles */
+
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 1rem;
+  width: 100%;
+}
+
+.grid-item {
+  min-width: 0; /* Prevent grid items from overflowing */
+}
+
+/* Extra small screens (default) */
+.grid-item-xs-1 { grid-column: span 1; }
+.grid-item-xs-2 { grid-column: span 2; }
+.grid-item-xs-3 { grid-column: span 3; }
+.grid-item-xs-4 { grid-column: span 4; }
+.grid-item-xs-5 { grid-column: span 5; }
+.grid-item-xs-6 { grid-column: span 6; }
+.grid-item-xs-7 { grid-column: span 7; }
+.grid-item-xs-8 { grid-column: span 8; }
+.grid-item-xs-9 { grid-column: span 9; }
+.grid-item-xs-10 { grid-column: span 10; }
+.grid-item-xs-11 { grid-column: span 11; }
+.grid-item-xs-12 { grid-column: span 12; }
+
+/* Small screens (576px and up) */
+@media (min-width: 576px) {
+  .grid-item-sm-1 { grid-column: span 1; }
+  .grid-item-sm-2 { grid-column: span 2; }
+  .grid-item-sm-3 { grid-column: span 3; }
+  .grid-item-sm-4 { grid-column: span 4; }
+  .grid-item-sm-5 { grid-column: span 5; }
+  .grid-item-sm-6 { grid-column: span 6; }
+  .grid-item-sm-7 { grid-column: span 7; }
+  .grid-item-sm-8 { grid-column: span 8; }
+  .grid-item-sm-9 { grid-column: span 9; }
+  .grid-item-sm-10 { grid-column: span 10; }
+  .grid-item-sm-11 { grid-column: span 11; }
+  .grid-item-sm-12 { grid-column: span 12; }
+}
+
+/* Medium screens (768px and up) */
+@media (min-width: 768px) {
+  .grid-item-md-1 { grid-column: span 1; }
+  .grid-item-md-2 { grid-column: span 2; }
+  .grid-item-md-3 { grid-column: span 3; }
+  .grid-item-md-4 { grid-column: span 4; }
+  .grid-item-md-5 { grid-column: span 5; }
+  .grid-item-md-6 { grid-column: span 6; }
+  .grid-item-md-7 { grid-column: span 7; }
+  .grid-item-md-8 { grid-column: span 8; }
+  .grid-item-md-9 { grid-column: span 9; }
+  .grid-item-md-10 { grid-column: span 10; }
+  .grid-item-md-11 { grid-column: span 11; }
+  .grid-item-md-12 { grid-column: span 12; }
+}
+
+/* Large screens (992px and up) */
+@media (min-width: 992px) {
+  .grid-item-lg-1 { grid-column: span 1; }
+  .grid-item-lg-2 { grid-column: span 2; }
+  .grid-item-lg-3 { grid-column: span 3; }
+  .grid-item-lg-4 { grid-column: span 4; }
+  .grid-item-lg-5 { grid-column: span 5; }
+  .grid-item-lg-6 { grid-column: span 6; }
+  .grid-item-lg-7 { grid-column: span 7; }
+  .grid-item-lg-8 { grid-column: span 8; }
+  .grid-item-lg-9 { grid-column: span 9; }
+  .grid-item-lg-10 { grid-column: span 10; }
+  .grid-item-lg-11 { grid-column: span 11; }
+  .grid-item-lg-12 { grid-column: span 12; }
+}
+
+/* Extra large screens (1200px and up) */
+@media (min-width: 1200px) {
+  .grid-item-xl-1 { grid-column: span 1; }
+  .grid-item-xl-2 { grid-column: span 2; }
+  .grid-item-xl-3 { grid-column: span 3; }
+  .grid-item-xl-4 { grid-column: span 4; }
+  .grid-item-xl-5 { grid-column: span 5; }
+  .grid-item-xl-6 { grid-column: span 6; }
+  .grid-item-xl-7 { grid-column: span 7; }
+  .grid-item-xl-8 { grid-column: span 8; }
+  .grid-item-xl-9 { grid-column: span 9; }
+  .grid-item-xl-10 { grid-column: span 10; }
+  .grid-item-xl-11 { grid-column: span 11; }
+  .grid-item-xl-12 { grid-column: span 12; }
+}
+
+/* Panel styles */
+.panel {
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.panel-header {
+  padding: 1rem 1.5rem;
+  background-color: #f8fafc;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.panel-title {
+  margin: 0;
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #1e293b;
+}
+
+.panel-content {
+  padding: 1.5rem;
+}
+
+/* Utility classes for spacing */
+.gap-sm { gap: 0.5rem; }
+.gap-md { gap: 1rem; }
+.gap-lg { gap: 1.5rem; }
+.gap-xl { gap: 2rem; }
+
+/* Responsive gap classes */
+@media (max-width: 768px) {
+  .grid-container {
+    gap: 0.75rem;
+  }
+  
+  .panel-content {
+    padding: 1rem;
+  }
+  
+  .panel-header {
+    padding: 0.75rem 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .grid-container {
+    gap: 0.5rem;
+  }
+  
+  .panel-content {
+    padding: 0.75rem;
+  }
+  
+  .panel-header {
+    padding: 0.5rem 0.75rem;
+  }
+}

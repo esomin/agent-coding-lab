@@ -29,7 +29,7 @@ MCP CallFlow는 개발자들이 MCP(Model Context Protocol) 서버와의 tool ca
 
 ```
 ┌─────────────────────────────────────────────────────────┐
-│                   Agent Playground                      │
+│                   MCP Callflow                      │
 │                                                         │
 │  ┌─────────────────┐  ┌─────────────────┐              │
 │  │  Natural Lang   │  │   JSON Editor   │              │

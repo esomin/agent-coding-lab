@@ -1,0 +1,104 @@
+/* Input panel styles */
+
+.input-panel {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.5rem;
+  overflow: hidden;
+}
+
+.input-panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 1.5rem;
+  background-color: #f8fafc;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.mode-tabs {
+  display: flex;
+  gap: 0.25rem;
+}
+
+.mode-tab {
+  padding: 0.5rem 1rem;
+  background-color: transparent;
+  border: 1px solid #d1d5db;
+  border-radius: 0.375rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #6b7280;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.mode-tab:hover {
+  background-color: #f3f4f6;
+  color: #374151;
+}
+
+.mode-tab.active {
+  background-color: #3b82f6;
+  border-color: #3b82f6;
+  color: #ffffff;
+}
+
+.mode-tab.active:hover {
+  background-color: #2563eb;
+  border-color: #2563eb;
+}
+
+.input-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.execute-btn {
+  padding: 0.5rem 1.5rem;
+  font-weight: 600;
+  min-width: 80px;
+}
+
+.execute-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.input-panel-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .input-panel-header {
+    flex-direction: column;
+    gap: 1rem;
+    align-items: stretch;
+  }
+  
+  .mode-tabs {
+    justify-content: center;
+  }
+  
+  .input-actions {
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .input-panel-header {
+    padding: 0.75rem 1rem;
+  }
+  
+  .mode-tab {
+    flex: 1;
+    text-align: center;
+  }
+}

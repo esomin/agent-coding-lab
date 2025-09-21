@@ -10,7 +10,7 @@ Agent Playground는 MCP(Model Context Protocol) 서버와의 상호작용을 시
 
 ```
 ┌─────────────────────────────────────────────────────────┐
-│                   Agent Playground                      │
+│                   MCP Callflow                      │
 │                                                         │
 │  ┌─────────────────┐  ┌─────────────────┐              │
 │  │  Natural Lang   │  │   JSON Editor   │              │
