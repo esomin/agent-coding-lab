@@ -1,24 +1,24 @@
 # Implementation Plan
 
-- [-] 1. 프로젝트 기본 설정 및 구조 생성
+- [x] 1. 프로젝트 기본 설정 및 구조 생성
   - Vite + React + TypeScript 프로젝트 초기화
   - 기본 폴더 구조 생성 (components, services, state, utils, types)
   - Tailwind CSS, React Flow, Monaco Editor 등 핵심 의존성 설치
   - _Requirements: 1, 1.1_
 
-- [ ] 2. 기본 타입 정의 및 인터페이스 구현
-  - [ ] 2.1 핵심 데이터 타입 정의
+- [x] 2. 기본 타입 정의 및 인터페이스 구현
+  - [x] 2.1 핵심 데이터 타입 정의
     - ToolCall, McpResponse, ExecutionStep 등 핵심 인터페이스 작성
     - AppState, SessionData 등 상태 관리 타입 정의
     - _Requirements: 1, 2, 3, 4, 5, 6_
 
-  - [ ] 2.2 서비스 인터페이스 정의
+  - [x] 2.2 서비스 인터페이스 정의
     - McpClient, NlpProcessor, SessionManager 인터페이스 작성
     - 각 서비스의 메서드 시그니처 및 반환 타입 정의
     - _Requirements: 1, 2, 5, 6_
 
 - [ ] 3. 기본 UI 레이아웃 및 컴포넌트 구조 구현
-  - [ ] 3.1 메인 레이아웃 컴포넌트 생성
+  - [-] 3.1 메인 레이아웃 컴포넌트 생성
     - 전체 애플리케이션 레이아웃 구성 (헤더, 사이드바, 메인 영역)
     - 반응형 그리드 시스템 구현
     - _Requirements: 1, 1.1_
