@@ -1,7 +1,7 @@
 // Session management types
 
-import { ExecutionStep } from './index';
-import { McpServerConfig, McpResponse } from './mcp';
+import type { ExecutionStep, McpResponse } from './index';
+import type { McpServerConfig } from './mcp';
 
 export interface PlaygroundSession {
   id: string;

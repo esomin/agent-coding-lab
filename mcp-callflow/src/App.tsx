@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { MainLayout, GridContainer, GridItem, Panel, InputPanel } from './components';
+import { useState } from 'react';
+import { MainLayout, GridContainer, GridItem, Panel, InputPanel, FlowDemo } from './components';
 import './App.css';
 
 function App() {
@@ -28,7 +28,7 @@ function App() {
         
         <GridItem xs={12} md={6} lg={8}>
           <Panel title="Flow Visualization">
-            <p>실행 흐름 다이어그램이 여기에 표시됩니다.</p>
+            <FlowDemo />
             {toolCallJson && (
               <div style={{ marginTop: '1rem', padding: '0.5rem', backgroundColor: '#f3f4f6', borderRadius: '0.25rem' }}>
                 <strong>현재 Tool Call:</strong>

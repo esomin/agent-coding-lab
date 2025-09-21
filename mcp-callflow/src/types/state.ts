@@ -1,7 +1,7 @@
 // Application state types
 
-import { PlaygroundSession } from './session';
-import { McpServerConfig, ConnectionStatus, ToolDefinition } from './mcp';
+import type { PlaygroundSession } from './session';
+import type { McpServerConfig, ConnectionStatus, ToolDefinition } from './mcp';
 
 export interface AppState {
   currentSession: PlaygroundSession | null;
